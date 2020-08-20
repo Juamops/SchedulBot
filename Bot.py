@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import datetime as dt
 
+
+token = 'INSERT_TOKEN_HERE'
 client = commands.Bot(command_prefix='#')
 client.remove_command('help')
 
@@ -334,4 +336,4 @@ def get_zoom(clss, period):
 
 
 
-client.run('NzQ1NjgzNDI0MjE1NDMzMzE5.Xz1Vzg.GtV3z8NuHJ4bRZhJIC4u597U5U8')
+client.run(token)
