@@ -3,7 +3,7 @@ from discord.ext import commands
 import datetime as dt
 
 
-token = 'INSERT_TOKEN_HERE'
+token = 'NzQ1NjgzNDI0MjE1NDMzMzE5.Xz1Vzg.UH2kyuypz6TQh7UnsSHVhI4cfGw'
 client = commands.Bot(command_prefix='#')
 client.remove_command('help')
 
@@ -15,40 +15,67 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-    print(f'{member}, has joined the server.')
+    print(f'{member.name}, has joined the server.')
+
+@client.command()
+async def s(ctx):
+
+    sched_only = '#s'
+    period = 8
+
+    if (period == 0):
+        await ctx.send(f'{get_message(user=ctx.author.id, period=period)}')
+
+    elif (ctx.message.content == sched_only):
+        await ctx.send(f'You have: {get_message(user=ctx.author.id, period=period)} class')
+
+    elif (len(ctx.message.mentions) == 1 and len(ctx.message.content.split(' ')) == 2):
+        await ctx.send(f'{ctx.message.mentions[0].name} has: {get_message(user=ctx.message.mentions[0].id, period=period)} class')
+
+    elif (ctx.message.content.split(' ')[len(ctx.message.content.split(' ')) -1] == 'zoom'):
+
+
+        if (ctx.message.content.split(' ')[1] == 'zoom'):
+            await ctx.send(f'The Zoom Link for {get_message(user=ctx.author.id, period=period)} is: '
+                       f'{get_zoom(clss=get_message(user=ctx.author.id, period=period), period=period)}')
+
+        elif (ctx.message.content.split(' ')[2] == 'zoom'):
+            await ctx.send(
+                f'The Zoom Link for {get_message(user=ctx.message.mentions[0].id, period=period)} is: '
+                f'{get_zoom(clss=get_message(user=ctx.message.mentions[0].id, period=period), period=period)}')
+
+
+    print('"Schedule" was used by: ' + ctx.message.author.name)
+
 
 @client.command()
 async def schedule(ctx):
 
     sched_only = '#schedule'
-    period = getCurrentPeriod()
+    period = 8
 
-    if (ctx.message.content == sched_only):
-        await ctx.send(f'You have: {get_message(user=ctx.author.id, period=period)}')
+    if (period == 0):
+        await ctx.send(f'{get_message(user=ctx.author.id, period=period)}')
+
+    elif (ctx.message.content == sched_only):
+        await ctx.send(f'You have: {get_message(user=ctx.author.id, period=period)} class')
 
     elif (len(ctx.message.mentions) == 1 and len(ctx.message.content.split(' ')) == 2):
-        await ctx.send(f'{ctx.message.mentions[0].name} has: {get_message(user=ctx.message.mentions[0].id, period=period)}')
+        await ctx.send(
+            f'{ctx.message.mentions[0].name} has: {get_message(user=ctx.message.mentions[0].id, period=period)} class')
 
-    elif (ctx.message.content.split(' ')[1] == 'zoom'):
+    elif (ctx.message.content.split(' ')[len(ctx.message.content.split(' '))-1] == 'zoom'):
 
-        if (period == 0):
-            await ctx.send(f'{get_message(user=ctx.author.id, period=period)}')
-
-        else:
+        if (ctx.message.content.split(' ')[1] == 'zoom'):
             await ctx.send(f'The Zoom Link for {get_message(user=ctx.author.id, period=period)} is: '
                            f'{get_zoom(clss=get_message(user=ctx.author.id, period=period), period=period)}')
 
-    elif (ctx.message.content.split(' ')[2] == 'zoom'):
-
-        if (period == 0):
-            await ctx.send(f'{get_message(user=ctx.message.mentions[0].id, period=period)}')
-
-        else:
+        elif (ctx.message.content.split(' ')[2] == 'zoom'):
             await ctx.send(
                 f'The Zoom Link for {get_message(user=ctx.message.mentions[0].id, period=period)} is: '
                 f'{get_zoom(clss=get_message(user=ctx.message.mentions[0].id, period=period), period=period)}')
 
-    print('"Schedule" was used by: ' + ctx.message.author)
+    print('"Schedule" was used by: ' + ctx.message.author.name)
 
 @client.command()
 async def register(ctx):
@@ -67,14 +94,45 @@ async def help(ctx):
 
     embed.set_footer(text='Have fun little kid')
     embed.set_thumbnail(url='https://cdn.discordapp.com/avatars/745683424215433319/233218136e7acd37e4b9724086b25f75.png?size=256')
-    embed.add_field(name='#schedule', value='This is the initializer, always type this to begin a command.',inline=True)
+    embed.add_field(name='#schedule or #s', value='This is the initializer, always type this to begin a command.',inline=True)
     embed.add_field(name='#register', value='Only do this when Juamops instructs you to.',inline=True)
+    embed.add_field(name='#p', value='This will give you the current period, no class', inline=True)
     embed.add_field(name='#help', value='This is the command you just used (it shows this)', inline=True)
     embed.add_field(name='@user', value='Mention someone to refer to their Schedule.',inline=True)
     embed.add_field(name='zoom', value='Use this to get the Zoom Link to the current class',inline=True)
 
     await ctx.send(embed = embed)
     print('"Help" was used by: ' + ctx.message.author)
+
+
+
+
+@client.command()
+async def p(ctx):
+    period = 8
+
+    if (period == 0):
+        await ctx.send(f'There are currently no active periods')
+
+    elif (len(ctx.message.content.split(' ')) == 1):
+        await ctx.send(f'The current period is: {period}')
+
+    elif (len(ctx.message.content.split(' ')) == 2 or len(ctx.message.content.split(' ')) == 3):
+
+
+        if (len(ctx.message.content.split(' ')) == 2):
+            int_per = int(ctx.message.content.split(' ')[len(ctx.message.content.split(' ')) - 1])
+            await ctx.send(f'Your period {int_per} is {get_message(user=ctx.message.author.id, period=int_per)}')
+
+        elif (len(ctx.message.content.split(' ')) == 3):
+            int_per = int(ctx.message.content.split(' ')[len(ctx.message.content.split(' ')) - 2])
+            mention = ctx.message.mentions[0]
+            await ctx.send(f'{mention.name}\'s period {int_per} is {get_message(user=mention.id, period=int_per)}')
+
+
+    print(f'"Period" was used by: {ctx.message.author.name}')
+
+
 
 def getCurrentPeriod():
     date = dt.datetime.now()
@@ -245,7 +303,7 @@ def get_message(user, period):
     if (user == ethereal):
         #Maksym
         user_dict = {
-            1: 'Drawing',
+            1: 'CP Geometry',
             2: 'English',
             3: 'PE',
             4: 'SSL',
@@ -313,14 +371,17 @@ def get_zoom(clss, period):
         'Honors Geometry': 'https://zoom.us/j/91510550409',
         'CP Geometry': 'http://asfg.zoom.us/my/evapetocz',
         'PE': 'https://us04web.zoom.us/j/78994899072?pwd=dDZPZCtUdGkvNUFReDdmQzZXVUpDZz09 PassCode: 83riEn',
+        'History/Civics': 'https://zoom.us/j/98306705268',
         'Programming': 'No Link Yet!',
         'Chemistry': 'https://zoom.us/j/6842856169',
         'Spanish P6': 'https://zoom.us/j/94454930902?pwd=WkZ1aG9UVGlzOXR5ZmhPSUpIQWJxQT09 PassCode: 702714',
         'Spanish P4': 'https://zoom.us/j/97444283237 PassCode: 411715',
+        'Spanish P2': 'https://zoom.us/j/94063504377?pwd=cUJkZVpKY1FWWEpabUVtUFc5Q1o1dz09 PassCode: 437640',
         'Spanish P1': 'https://zoom.us/j/93362871535?pwd=L0FzWjJQWkVUbFhhUUlXbGJEVm9MUT09 PassCode: 340584',
         'World History': 'https://zoom.us/j/3224597852',
-        'AP Human Geography': 'https://zoom.us/j/91699393495 PassCode: 960317',
-        'SSL': 'No Link Yet!',
+        'AP Human Geography': 'https://zoom.us/j/91699393495?pwd=UlNHcXRYSGZlbURJS2NaMWZpWURTdz09 PassCode: 960317',
+        'SSL': 'https://zoom.us/w/93505043500?tk=j5cOy8FqHA-Pa2UQvFdVJSs4Q-tyNyzbILV_j9CpVXA.DQIAAAAVxVW8LBZUeGctak5HUFNyZWtRQVNRbjRBUGN3AAAAAAAAAAAAAAAAAAAAAAAAAAAA&pwd=OCtuVi9va1dZYzdEa0txaUwyMzBwdz09',
+        'Drama': 'No Link Yet!',
         'Mentoring': 'This Feature Will be Added Shortly!'
     }
 
@@ -330,8 +391,6 @@ def get_zoom(clss, period):
         tagger = clss
 
     return zoom_links[tagger]
-
-
 
 
 
