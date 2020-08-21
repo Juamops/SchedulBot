@@ -3,7 +3,7 @@ from discord.ext import commands
 import datetime as dt
 
 
-token = 'NzQ1NjgzNDI0MjE1NDMzMzE5.Xz1Vzg.UH2kyuypz6TQh7UnsSHVhI4cfGw'
+token = 'INSERT_TOKEN_HERE'
 client = commands.Bot(command_prefix='#')
 client.remove_command('help')
 
